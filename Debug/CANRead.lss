@@ -1,0 +1,203 @@
+
+CANRead.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000102  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .comment      00000030  00000000  00000000  00000156  2**0
+                  CONTENTS, READONLY
+  2 .debug_aranges 00000030  00000000  00000000  00000186  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   00000243  00000000  00000000  000001b6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 00000161  00000000  00000000  000003f9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   00000189  00000000  00000000  0000055a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000044  00000000  00000000  000006e4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    000001c0  00000000  00000000  00000728  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    00000021  00000000  00000000  000008e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_ranges 00000020  00000000  00000000  00000909  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 78 00 	call	0xf0	; 0xf0 <main>
+  78:	0c 94 7f 00 	jmp	0xfe	; 0xfe <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <spi_init_master>:
+
+
+//Initialize SPI Master Device
+void spi_init_master (void)
+{
+	DDRC = (1<<PORTC2);              //For testing
+  80:	84 e0       	ldi	r24, 0x04	; 4
+  82:	87 b9       	out	0x07, r24	; 7
+	DDRB = (1<<PORTB5)|(1<<PORTB3)|(1<<PORTB2);              //Set MOSI, SCK as Output
+  84:	8c e2       	ldi	r24, 0x2C	; 44
+  86:	84 b9       	out	0x04, r24	; 4
+	//SPCR = (1<<SPE)|(1<<MSTR); //Enable SPI, Set as Master
+	PORTB = PORTB|(1<<PORTB2);
+  88:	2a 9a       	sbi	0x05, 2	; 5
+	SPCR=(1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<SPR1);
+  8a:	83 e5       	ldi	r24, 0x53	; 83
+  8c:	8c bd       	out	0x2c, r24	; 44
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  8e:	83 ec       	ldi	r24, 0xC3	; 195
+  90:	99 e0       	ldi	r25, 0x09	; 9
+  92:	01 97       	sbiw	r24, 0x01	; 1
+  94:	f1 f7       	brne	.-4      	; 0x92 <spi_init_master+0x12>
+  96:	00 c0       	rjmp	.+0      	; 0x98 <spi_init_master+0x18>
+  98:	00 00       	nop
+  9a:	08 95       	ret
+
+0000009c <spi_tranceiver>:
+	
+	mcp_read_reg = 0b00000011;
+	mcp_reg_canctrl = 0x0f;
+	mcp_reset = 0b11000000;
+
+	PORTB &= ~(1<<2);
+  9c:	2a 98       	cbi	0x05, 2	; 5
+	SPDR = mcp_reset;
+  9e:	80 ec       	ldi	r24, 0xC0	; 192
+  a0:	8e bd       	out	0x2e, r24	; 46
+	while (!(SPSR & (1<<SPIF)));
+  a2:	0d b4       	in	r0, 0x2d	; 45
+  a4:	07 fe       	sbrs	r0, 7
+  a6:	fd cf       	rjmp	.-6      	; 0xa2 <spi_tranceiver+0x6>
+	PORTB = PORTB | (1<<PORTB2);
+  a8:	2a 9a       	sbi	0x05, 2	; 5
+  aa:	8f e4       	ldi	r24, 0x4F	; 79
+  ac:	93 ec       	ldi	r25, 0xC3	; 195
+  ae:	01 97       	sbiw	r24, 0x01	; 1
+  b0:	f1 f7       	brne	.-4      	; 0xae <spi_tranceiver+0x12>
+  b2:	00 c0       	rjmp	.+0      	; 0xb4 <spi_tranceiver+0x18>
+  b4:	00 00       	nop
+	{
+		
+		dummy = 0b00000000;
+		PORTB &= ~(1<<2);
+		
+		SPDR = mcp_read_reg;
+  b6:	93 e0       	ldi	r25, 0x03	; 3
+		while (!(SPSR & (1<<SPIF)));
+		
+		SPDR = mcp_reg_canctrl;
+  b8:	8f e0       	ldi	r24, 0x0F	; 15
+	
+	while (1==1)
+	{
+		
+		dummy = 0b00000000;
+		PORTB &= ~(1<<2);
+  ba:	2a 98       	cbi	0x05, 2	; 5
+		
+		SPDR = mcp_read_reg;
+  bc:	9e bd       	out	0x2e, r25	; 46
+		while (!(SPSR & (1<<SPIF)));
+  be:	0d b4       	in	r0, 0x2d	; 45
+  c0:	07 fe       	sbrs	r0, 7
+  c2:	fd cf       	rjmp	.-6      	; 0xbe <spi_tranceiver+0x22>
+		
+		SPDR = mcp_reg_canctrl;
+  c4:	8e bd       	out	0x2e, r24	; 46
+	    while (!(SPSR & (1<<SPIF)));
+  c6:	0d b4       	in	r0, 0x2d	; 45
+  c8:	07 fe       	sbrs	r0, 7
+  ca:	fd cf       	rjmp	.-6      	; 0xc6 <spi_tranceiver+0x2a>
+		
+		SPDR = dummy;
+  cc:	1e bc       	out	0x2e, r1	; 46
+		while (!(SPSR & (1<<SPIF)));
+  ce:	0d b4       	in	r0, 0x2d	; 45
+  d0:	07 fe       	sbrs	r0, 7
+  d2:	fd cf       	rjmp	.-6      	; 0xce <spi_tranceiver+0x32>
+  d4:	e1 ee       	ldi	r30, 0xE1	; 225
+  d6:	f4 e0       	ldi	r31, 0x04	; 4
+  d8:	31 97       	sbiw	r30, 0x01	; 1
+  da:	f1 f7       	brne	.-4      	; 0xd8 <spi_tranceiver+0x3c>
+  dc:	00 c0       	rjmp	.+0      	; 0xde <spi_tranceiver+0x42>
+  de:	00 00       	nop
+		
+		
+		_delay_ms(5);
+	
+		PORTB = PORTB | (1<<PORTB2); 
+  e0:	2a 9a       	sbi	0x05, 2	; 5
+  e2:	e3 ec       	ldi	r30, 0xC3	; 195
+  e4:	f9 e0       	ldi	r31, 0x09	; 9
+  e6:	31 97       	sbiw	r30, 0x01	; 1
+  e8:	f1 f7       	brne	.-4      	; 0xe6 <spi_tranceiver+0x4a>
+  ea:	00 c0       	rjmp	.+0      	; 0xec <spi_tranceiver+0x50>
+  ec:	00 00       	nop
+  ee:	e5 cf       	rjmp	.-54     	; 0xba <spi_tranceiver+0x1e>
+
+000000f0 <main>:
+
+
+//Main
+int main(void)
+{
+	DDRC= 0XFF;
+  f0:	8f ef       	ldi	r24, 0xFF	; 255
+  f2:	87 b9       	out	0x07, r24	; 7
+	spi_init_master();
+  f4:	0e 94 40 00 	call	0x80	; 0x80 <spi_init_master>
+	spi_tranceiver(0b10100000);
+  f8:	80 ea       	ldi	r24, 0xA0	; 160
+  fa:	0e 94 4e 00 	call	0x9c	; 0x9c <spi_tranceiver>
+
+000000fe <_exit>:
+  fe:	f8 94       	cli
+
+00000100 <__stop_program>:
+ 100:	ff cf       	rjmp	.-2      	; 0x100 <__stop_program>
